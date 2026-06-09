@@ -11,5 +11,16 @@ export default defineConfig({
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
     server: { entry: "server" },
+    // Prerender all routes so the output is a fully static site (plain HTML/CSS/JS
+    // ready to upload to any hosting — no Node/Workers runtime needed).
+    prerender: {
+      enabled: true,
+      crawlLinks: true,
+    },
+    pages: [{ path: "/", prerender: { enabled: true, crawlLinks: true } }],
   },
+  // Outside the Lovable cloud build, output a static site instead of a Cloudflare
+  // Worker bundle. The `static` preset writes the prerendered HTML + client assets
+  // straight into `dist/` so the folder can be uploaded to any static host as-is.
+  nitro: { preset: "static" },
 });
